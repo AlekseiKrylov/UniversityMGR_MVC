@@ -1,0 +1,36 @@
+﻿@model Course
+
+@{
+    ViewData["Title"] = $"Details {Model.Name}";
+}
+<h1>Details</h1>
+
+<div>
+    <h4>Course: @Model.Name</h4>
+    <hr />
+    <dl>
+        <dt>@Html.DisplayNameFor(model => model.Description)</dt>
+        <dd>@Html.DisplayFor(model => model.Description)</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List of Courses</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Groups</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Group item in Model.Groups)
+        {
+            <tr>
+                <td><a asp-controller="Group" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

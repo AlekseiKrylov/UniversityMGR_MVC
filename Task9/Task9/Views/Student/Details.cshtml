@@ -1,0 +1,21 @@
+﻿@model Student
+
+@{
+    ViewData["Title"] = $"Details {Model.FullName}";
+}
+<h1>Details</h1>
+
+<div>
+    <h4>Student: @Model.FullName</h4>
+    <dl>
+        <dt>@Html.DisplayNameFor(model => model.Group)</dt>
+        <dd>@Html.DisplayFor(model => model.Group.Name)</dd>
+        <dt>@Html.DisplayNameFor(model => model.Group.Course)</dt>
+        <dd>@Html.DisplayFor(model => model.Group.Course.Name)</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List of Students</a>
+</div>
