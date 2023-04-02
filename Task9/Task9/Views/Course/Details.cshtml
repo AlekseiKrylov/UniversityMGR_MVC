@@ -15,8 +15,9 @@
 </div>
 
 <div>
+    <a asp-action="Index">To List of Courses</a> |
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List of Courses</a>
+    <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a>
 </div>
 
 <table class="table">

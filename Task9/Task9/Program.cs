@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<Task9Context>(options => options.UseSqlServer(connection));
 builder.Services.AddTransient<ICRUDService<Course>, CourseService>();
+builder.Services.AddTransient<ICourseService, CourseService>();
 builder.Services.AddTransient<ICRUDService<Group>, GroupService>();
 builder.Services.AddTransient<IGroupService, GroupService>();
 builder.Services.AddTransient<ICRUDService<Student>, StudentService>();
@@ -17,20 +18,25 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-//if (!app.Environment.IsDevelopment())
-//{
-//    app.UseExceptionHandler("/Home/Error");
-//    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-//    app.UseHsts();
-//}
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<Task9Context>();
+    dbContext.Database.Migrate();
+}
 
-//app.UseHttpsRedirection();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-//app.UseRouting();
+app.UseRouting();
 
-//app.UseAuthorization();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

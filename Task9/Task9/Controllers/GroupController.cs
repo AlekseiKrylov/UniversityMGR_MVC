@@ -22,7 +22,7 @@ namespace Task9.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var groups = await _groupCRUDService.GetAllEntitiesAsync();
+            var groups = await _groupCRUDService.GetAllAsync();
             return View(groups);
         }
 
@@ -30,18 +30,18 @@ namespace Task9.Controllers
         {
             if (id == null)
                 return NotFound();
-            
-            var group = await _groupCRUDService.GetEntityByIdAsync((int)id);
-            
+
+            var group = await _groupService.GetDetailsAsync((int)id);
+
             if (group == null)
                 return NotFound();
-            
+
             return View(group);
         }
 
         public async Task<IActionResult> Create()
         {
-            ViewData["CourseId"] = new SelectList(await _courseCRUDService.GetAllEntitiesAsync(), "Id", "Name");
+            ViewData["CourseId"] = await ListOfCoursesAsync();
             return View();
         }
 
@@ -49,27 +49,36 @@ namespace Task9.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Group group)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                ViewData["CourseId"] = await ListOfCoursesAsync();
+                return View(group);
+            }
+
+            try
             {
                 await _groupCRUDService.CreateAsync(group);
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["CourseId"] = new SelectList(await _courseCRUDService.GetAllEntitiesAsync(), "Id", "Name");
-            return View(group);
+            catch (ArgumentNullException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                ViewData["CourseId"] = await ListOfCoursesAsync();
+                return View(group);
+            }
         }
 
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
                 return NotFound();
-            
-            var group = await _groupCRUDService.GetEntityByIdAsync((int)id);
-            
+
+            var group = await _groupCRUDService.GetByIdAsync((int)id);
+
             if (group == null)
                 return NotFound();
-            
-            ViewData["CourseId"] = new SelectList(await _courseCRUDService.GetAllEntitiesAsync(), "Id", "Name");
+
+            ViewData["CourseId"] = await ListOfCoursesAsync();
             return View(group);
         }
 
@@ -77,26 +86,35 @@ namespace Task9.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Group group)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                ViewData["CourseId"] = await ListOfCoursesAsync();
+                return View(group);
+            }
+
+            try
             {
                 await _groupCRUDService.UpdateAsync(group);
                 return RedirectToAction(nameof(Details), new { id = group.Id });
             }
-
-            ViewData["CourseId"] = new SelectList(await _courseCRUDService.GetAllEntitiesAsync(), "Id", "Name");
-            return View(group);
+            catch (ArgumentNullException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                ViewData["CourseId"] = await ListOfCoursesAsync();
+                return View(group);
+            }
         }
 
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
                 return NotFound();
-            
-            var group = await _groupCRUDService.GetEntityByIdAsync((int)id);
-            
+
+            var group = await _groupCRUDService.GetByIdAsync((int)id);
+
             if (group == null)
                 return NotFound();
-            
+
             return View(group);
         }
 
@@ -107,24 +125,23 @@ namespace Task9.Controllers
             try
             {
                 await _groupCRUDService.DeleteAsync(id);
+                return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                var group = await _groupCRUDService.GetEntityByIdAsync(id);
+                var group = await _groupCRUDService.GetByIdAsync(id);
                 return View(group);
             }
-            return RedirectToAction(nameof(Index));
         }
 
-        
         public async Task<ActionResult> ExpelAll(int? id)
         {
             if (id == null)
                 return NotFound();
 
-            var group = await _groupCRUDService.GetEntityByIdAsync((int)id);
-            
+            var group = await _groupService.GetDetailsAsync((int)id);
+
             if (group == null)
                 return NotFound();
 
@@ -137,6 +154,11 @@ namespace Task9.Controllers
         {
             await _groupService.ExpelAllStudentsAsync(id);
             return RedirectToAction(nameof(Details), new { id });
+        }
+
+        private async Task<SelectList> ListOfCoursesAsync()
+        {
+            return new SelectList(await _courseCRUDService.GetAllAsync(), "Id", "Name");
         }
     }
 }

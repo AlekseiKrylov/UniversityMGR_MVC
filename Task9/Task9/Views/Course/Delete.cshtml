@@ -25,9 +25,10 @@
     </dl>
 
     <form asp-action="Delete">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List of Courses</a>
+        <a asp-action="Details" asp-route-id="@Model?.Id">Back to Course Details</a> |
+        <a asp-action="Index">To List of Courses</a>
     </form>
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 </div>

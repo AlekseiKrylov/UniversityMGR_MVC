@@ -8,15 +8,17 @@ namespace Task9.Controllers
     public class CourseController : Controller
     {
         private readonly ICRUDService<Course> _courseCRUDService;
+        private readonly ICourseService _courseService;
 
-        public CourseController(ICRUDService<Course> courseCRUDService)
+        public CourseController(ICRUDService<Course> courseCRUDService, ICourseService courseService)
         {
             _courseCRUDService = courseCRUDService;
+            _courseService = courseService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var courses = await _courseCRUDService.GetAllEntitiesAsync();
+            var courses = await _courseCRUDService.GetAllAsync();
             return View(courses);
         }
 
@@ -25,7 +27,7 @@ namespace Task9.Controllers
             if (id == null)
                 return NotFound();
 
-            var course = await _courseCRUDService.GetEntityByIdAsync((int)id);
+            var course = await _courseService.GetDetailsAsync((int)id);
             if (course == null)
                 return NotFound();
 
@@ -40,13 +42,19 @@ namespace Task9.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Course course)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(course);
+
+            try
             {
                 await _courseCRUDService.CreateAsync(course);
                 return RedirectToAction(nameof(Index));
             }
-
-            return View(course);
+            catch (ArgumentNullException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(course);
+            }
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -54,7 +62,8 @@ namespace Task9.Controllers
             if (id == null)
                 return NotFound();
 
-            var course = await _courseCRUDService.GetEntityByIdAsync((int)id);
+            var course = await _courseCRUDService.GetByIdAsync((int)id);
+
             if (course == null)
                 return NotFound();
 
@@ -64,13 +73,19 @@ namespace Task9.Controllers
         [HttpPost]
         public async Task<ActionResult> Edit(Course course)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(course);
+
+            try
             {
                 await _courseCRUDService.UpdateAsync(course);
                 return RedirectToAction(nameof(Details), new { id = course.Id });
             }
-
-            return View(course);
+            catch (ArgumentNullException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(course);
+            }
         }
 
         public async Task<ActionResult> Delete(int? id)
@@ -78,7 +93,7 @@ namespace Task9.Controllers
             if (id == null)
                 return NotFound();
 
-            var course = await _courseCRUDService.GetEntityByIdAsync((int)id);
+            var course = await _courseCRUDService.GetByIdAsync((int)id);
 
             if (course == null)
                 return NotFound();
@@ -92,14 +107,14 @@ namespace Task9.Controllers
             try
             {
                 await _courseCRUDService.DeleteAsync(id);
+                return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                var course = await _courseCRUDService.GetEntityByIdAsync((int)id);
+                var course = await _courseCRUDService.GetByIdAsync((int)id);
                 return View(course);
             }
-            return RedirectToAction(nameof(Index));
         }
     }
 }

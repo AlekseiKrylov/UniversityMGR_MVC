@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Task9.Models
 {
     public class Group
     {
+        [Key]
         [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
 
@@ -13,17 +14,18 @@ namespace Task9.Models
         [MaxLength(50)]
         [Display(Name = "Group Name")]
         public string Name { get; set; }
-        
+
         [Required]
         public int CourseId { get; set; }
 
+        [ForeignKey("CourseId")]
         [HiddenInput(DisplayValue = false)]
         public Course? Course { get; set; }
 
         [HiddenInput(DisplayValue = false)]
-        public ICollection<Student> Students { get; set; }
-        
-         public Group()
+        public virtual ICollection<Student>? Students { get; set; }
+
+        public Group()
         {
             Students = new List<Student>();
         }

@@ -10,13 +10,14 @@
     <h6>
         Course: 
         <a asp-controller="Course" asp-action="Details" asp-route-id="@Model.CourseId">@Html.DisplayFor(model => model.Course.Name)</a>
-        </h6>
+    </h6>
     <hr />
 </div>
 
 <div>
+    <a asp-action="Index">To List of Groups</a> |
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List of Groups</a>
+    <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a>
 </div>
 
 <table class="table">

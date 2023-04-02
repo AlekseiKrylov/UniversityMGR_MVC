@@ -14,35 +14,42 @@ namespace Task9.Services
             _context = context;
         }
 
-        public async Task<List<Group>> GetAllEntitiesAsync()
+        public async Task<List<Group>> GetAllAsync()
         {
-            return await _context.Groups.Include(g => g.Course)
-                        .Include(g => g.Students)
-                            .ToListAsync();
+            return await _context.Groups.ToListAsync();
         }
 
-        public async Task<Group> GetEntityByIdAsync(int id)
+        public async Task<Group> GetByIdAsync(int id)
         {
-            return await _context.Groups.Include(g => g.Course)
-                        .Include(g => g.Students)
-                            .FirstOrDefaultAsync(g => g.Id == id);
+            return await _context.Groups.FindAsync(id);
         }
 
         public async Task CreateAsync(Group group)
         {
+            if (group == null)
+                throw new ArgumentNullException($"Exeption! Lost data. The object {nameof(group)} is null.");
+
             _context.Groups.Add(group);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Group course)
+        public async Task UpdateAsync(Group group)
         {
-            _context.Entry(course).State = EntityState.Modified;
+            if (group == null)
+                throw new ArgumentNullException($"Exeption! Lost data. The object {nameof(group)} is null.");
+
+            _context.Groups.Update(group);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            Group group = await _context.Groups.Include(g => g.Students).FirstAsync(g => g.Id == id);
+            Group group = await _context.Groups.Include(g => g.Students)
+                            .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (group == null)
+                throw new InvalidOperationException($"Exeption! The group with ID={id} was not found in the context.");
+
             if (group.Students.Count > 0)
                 throw new DbUpdateException("You cannot delete a group with students");
 
@@ -50,17 +57,26 @@ namespace Task9.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task<Group> GetDetailsAsync(int id)
+        {
+            return await _context.Groups.Include(g => g.Course)
+                        .Include(g => g.Students)
+                            .FirstOrDefaultAsync(g => g.Id == id);
+        }
+
         public async Task ExpelAllStudentsAsync(int id)
         {
-            List<Student> students = await _context.Students.Where(s => s.GroupId == id).ToListAsync();
-            if (students.Count > 0)
-                foreach (var student in students)
-                {
-                    student.GroupId = null;
-                    _context.Entry(student).State = EntityState.Modified;
-                }
-            await _context.SaveChangesAsync();
+            var students = await _context.Students.Where(s => s.GroupId == id).ToListAsync();
 
+            if (students.Count == 0)
+                return;
+
+            foreach (var student in students)
+            {
+                student.GroupId = null;
+                _context.Students.Update(student);
+            }
+            await _context.SaveChangesAsync();
         }
     }
 }
