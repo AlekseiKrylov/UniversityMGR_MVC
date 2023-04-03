@@ -1,0 +1,46 @@
+﻿@model Group
+
+@{
+    ViewData["Title"] = $"Expel Students";
+}
+
+<h1>Expel Students from Group</h1>
+
+<h3>Are you sure you want to expel all students from the group?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Course
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayNameFor(model => model.Course.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Group
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Name
+        </dd>
+        <dt class="col-sm-2">
+            Number of Students
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Students.Count
+        </dd>
+        <dd>
+            <ul>
+                @foreach (Student student in Model.Students)
+                {
+                    <li>@student.FullName</li>
+                }
+            </ul>
+        </dd>
+    </dl>
+
+    <form asp-action="ExpelAll">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Expel" class="btn btn-danger" /> |
+        <a asp-action="Details" asp-route-id="@Model?.Id">Back to Group Details</a>
+    </form>
+</div>
