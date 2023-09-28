@@ -10,13 +10,13 @@ namespace UniversityMGR_MVC.Tests.Mock
 {
     public class GroupServiceMockTests
     {
-        private readonly Mock<Task9Context> _task9ContextMock;
+        private readonly Mock<UniversityMGRContext> _UniversityMGR_MVCContextMock;
         private readonly GroupService _groupService;
 
         public GroupServiceMockTests()
         {
-            _task9ContextMock = new Mock<Task9Context>();
-            _groupService = new GroupService(_task9ContextMock.Object);
+            _UniversityMGR_MVCContextMock = new Mock<UniversityMGRContext>();
+            _groupService = new GroupService(_UniversityMGR_MVCContextMock.Object);
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace UniversityMGR_MVC.Tests.Mock
                 })
                 .Callback((Group group, CancellationToken token) => groupsList.Add(group));
 
-            _task9ContextMock.Setup(c => c.Groups.Add(newGroup))
+            _UniversityMGR_MVCContextMock.Setup(c => c.Groups.Add(newGroup))
                 .Returns(dbSetMock.Object.Add)
                 .Callback((Group group) => groupsList.Add(group));
 
@@ -63,7 +63,7 @@ namespace UniversityMGR_MVC.Tests.Mock
             //Assert
             Assert.Contains(newGroup, groupsList);
             dbSetMock.Verify(m => m.Add(It.IsAny<Group>()), Times.Once());
-            _task9ContextMock.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
+            _UniversityMGR_MVCContextMock.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace UniversityMGR_MVC.Tests.Mock
             };
             var dbSetMock = groupsList.AsQueryable().BuildMockDbSet();
 
-            _task9ContextMock.Setup(c => c.Groups.Update(updatedGroup))
+            _UniversityMGR_MVCContextMock.Setup(c => c.Groups.Update(updatedGroup))
                 .Returns(dbSetMock.Object.Update)
                 .Callback((Group group) => groupsList[0] = group);
 
@@ -100,7 +100,7 @@ namespace UniversityMGR_MVC.Tests.Mock
             //Assert
             Assert.Contains(updatedGroup, groupsList);
             dbSetMock.Verify(x => x.Update(updatedGroup), Times.Once);
-            _task9ContextMock.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+            _UniversityMGR_MVCContextMock.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         private static List<Group> GetFakeGroupList()

@@ -7,7 +7,7 @@ using UniversityMGR_MVC.Services.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<Task9Context>(options => options.UseSqlServer(connection));
+builder.Services.AddDbContext<UniversityMGRContext>(options => options.UseSqlServer(connection));
 builder.Services.AddTransient<ICRUDService<Course>, CourseService>();
 builder.Services.AddTransient<ICourseService, CourseService>();
 builder.Services.AddTransient<ICRUDService<Group>, GroupService>();
@@ -20,7 +20,7 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<Task9Context>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<UniversityMGRContext>();
     dbContext.Database.Migrate();
 }
 

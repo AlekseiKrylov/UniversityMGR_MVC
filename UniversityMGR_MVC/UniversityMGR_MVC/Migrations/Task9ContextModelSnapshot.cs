@@ -8,10 +8,10 @@ using UniversityMGR_MVC.Data;
 
 #nullable disable
 
-namespace Task9.Migrations
+namespace UniversityMGR_MVC.Migrations
 {
-    [DbContext(typeof(Task9Context))]
-    partial class Task9ContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(UniversityMGRContext))]
+    partial class UniversityMGR_MVCContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -22,7 +22,7 @@ namespace Task9.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Task9.Models.Course", b =>
+            modelBuilder.Entity("UniversityMGR_MVC.Models.Course", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -44,7 +44,7 @@ namespace Task9.Migrations
                     b.ToTable("Courses");
                 });
 
-            modelBuilder.Entity("Task9.Models.Group", b =>
+            modelBuilder.Entity("UniversityMGR_MVC.Models.Group", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -67,7 +67,7 @@ namespace Task9.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("Task9.Models.Student", b =>
+            modelBuilder.Entity("UniversityMGR_MVC.Models.Student", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -94,9 +94,9 @@ namespace Task9.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("Task9.Models.Group", b =>
+            modelBuilder.Entity("UniversityMGR_MVC.Models.Group", b =>
                 {
-                    b.HasOne("Task9.Models.Course", "Course")
+                    b.HasOne("UniversityMGR_MVC.Models.Course", "Course")
                         .WithMany("Groups")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -105,21 +105,21 @@ namespace Task9.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("Task9.Models.Student", b =>
+            modelBuilder.Entity("UniversityMGR_MVC.Models.Student", b =>
                 {
-                    b.HasOne("Task9.Models.Group", "Group")
+                    b.HasOne("UniversityMGR_MVC.Models.Group", "Group")
                         .WithMany("Students")
                         .HasForeignKey("GroupId");
 
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("Task9.Models.Course", b =>
+            modelBuilder.Entity("UniversityMGR_MVC.Models.Course", b =>
                 {
                     b.Navigation("Groups");
                 });
 
-            modelBuilder.Entity("Task9.Models.Group", b =>
+            modelBuilder.Entity("UniversityMGR_MVC.Models.Group", b =>
                 {
                     b.Navigation("Students");
                 });

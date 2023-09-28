@@ -6,17 +6,17 @@ namespace UniversityMGR_MVC.Tests.InMemory
 {
     public class TestInMemoryFixture : IAsyncLifetime
     {
-        public DbContextOptions<Task9Context> TestContextOptions { get; private set; }
-        public Task9Context TestContext { get; private set; }
+        public DbContextOptions<UniversityMGRContext> TestContextOptions { get; private set; }
+        public UniversityMGRContext TestContext { get; private set; }
 
         public async Task InitializeAsync()
         {
             var dbSuffix = Guid.NewGuid().ToString();
-            TestContextOptions = new DbContextOptionsBuilder<Task9Context>()
-                .UseInMemoryDatabase($"Task9Test_DB_{dbSuffix}")
+            TestContextOptions = new DbContextOptionsBuilder<UniversityMGRContext>()
+                .UseInMemoryDatabase($"UniversityMGR_MVCTest_DB_{dbSuffix}")
                 .Options;
 
-            TestContext = new Task9Context(TestContextOptions);
+            TestContext = new UniversityMGRContext(TestContextOptions);
 
             var course1 = new Course { Id = 1, Name = "First Course", Description = "This is the first Course", Groups = new List<Group>() };
             var course2 = new Course { Id = 2, Name = "Second Course", Description = "This is the second Course", Groups = new List<Group>() };

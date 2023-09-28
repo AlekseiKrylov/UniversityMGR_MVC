@@ -10,13 +10,13 @@ namespace UniversityMGR_MVC.Tests.Mock
 {
     public class StudentServiceMockTests
     {
-        private readonly Mock<Task9Context> _task9ContextMock;
+        private readonly Mock<UniversityMGRContext> _UniversityMGR_MVCContextMock;
         private readonly StudentService _studentService;
 
         public StudentServiceMockTests()
         {
-            _task9ContextMock = new Mock<Task9Context>();
-            _studentService = new StudentService(_task9ContextMock.Object);
+            _UniversityMGR_MVCContextMock = new Mock<UniversityMGRContext>();
+            _studentService = new StudentService(_UniversityMGR_MVCContextMock.Object);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace UniversityMGR_MVC.Tests.Mock
                 })
                 .Callback((Student student, CancellationToken token) => studentsList.Add(student));
 
-            _task9ContextMock.Setup(c => c.Students.Add(newStudent))
+            _UniversityMGR_MVCContextMock.Setup(c => c.Students.Add(newStudent))
                 .Returns(dbSetMock.Object.Add)
                 .Callback((Student student) => studentsList.Add(student));
 
@@ -57,7 +57,7 @@ namespace UniversityMGR_MVC.Tests.Mock
             //Assert
             Assert.Contains(newStudent, studentsList);
             dbSetMock.Verify(m => m.Add(It.IsAny<Student>()), Times.Once());
-            _task9ContextMock.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
+            _UniversityMGR_MVCContextMock.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace UniversityMGR_MVC.Tests.Mock
             };
             var dbSetMock = studentsList.AsQueryable().BuildMockDbSet();
 
-            _task9ContextMock.Setup(c => c.Students.Update(updatedStudent))
+            _UniversityMGR_MVCContextMock.Setup(c => c.Students.Update(updatedStudent))
                 .Returns(dbSetMock.Object.Update)
                 .Callback((Student student) => studentsList[0] = student);
 
@@ -95,7 +95,7 @@ namespace UniversityMGR_MVC.Tests.Mock
             //Assert
             Assert.Contains(updatedStudent, studentsList);
             dbSetMock.Verify(x => x.Update(updatedStudent), Times.Once);
-            _task9ContextMock.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+            _UniversityMGR_MVCContextMock.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -103,7 +103,7 @@ namespace UniversityMGR_MVC.Tests.Mock
         {
             //Arrange
             int studentId = 99;
-            _task9ContextMock.Setup(x => x.Students.FindAsync(studentId)).Returns(null);
+            _UniversityMGR_MVCContextMock.Setup(x => x.Students.FindAsync(studentId)).Returns(null);
 
             //Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => _studentService.DeleteAsync(studentId));
@@ -118,9 +118,9 @@ namespace UniversityMGR_MVC.Tests.Mock
             int studentId = deletedStudent.Id;
             var dbSetMock = studentsList.AsQueryable().BuildMockDbSet();
 
-            _task9ContextMock.Setup(c => c.Students.FindAsync(studentId))
+            _UniversityMGR_MVCContextMock.Setup(c => c.Students.FindAsync(studentId))
                 .ReturnsAsync(studentsList.Find(s => s.Id == studentId));
-            _task9ContextMock.Setup(c => c.Students.Remove(deletedStudent))
+            _UniversityMGR_MVCContextMock.Setup(c => c.Students.Remove(deletedStudent))
                 .Returns(dbSetMock.Object.Remove)
                 .Callback((Student student) => studentsList.Remove(student));
 
@@ -130,7 +130,7 @@ namespace UniversityMGR_MVC.Tests.Mock
             //Assert
             Assert.DoesNotContain(deletedStudent, studentsList);
             dbSetMock.Verify(x => x.Remove(deletedStudent), Times.Once);
-            _task9ContextMock.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+            _UniversityMGR_MVCContextMock.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -138,7 +138,7 @@ namespace UniversityMGR_MVC.Tests.Mock
         {
             //Arrange
             int studentId = 99;
-            _task9ContextMock.Setup(x => x.Students.FindAsync(studentId)).Returns(null);
+            _UniversityMGR_MVCContextMock.Setup(x => x.Students.FindAsync(studentId)).Returns(null);
 
             //Act + Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() => _studentService.ExpelAsync(studentId));
@@ -150,7 +150,7 @@ namespace UniversityMGR_MVC.Tests.Mock
             //Arrange
             List<Student> studentList = GetFakeStudentList();
             Student student = studentList[3];
-            _task9ContextMock.Setup(x => x.Students.FindAsync(student.Id)).ReturnsAsync(student);
+            _UniversityMGR_MVCContextMock.Setup(x => x.Students.FindAsync(student.Id)).ReturnsAsync(student);
 
             //Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => _studentService.ExpelAsync(student.Id));
@@ -165,9 +165,9 @@ namespace UniversityMGR_MVC.Tests.Mock
             int groupId = (int)expelledStudent.GroupId;
             var dbSetMock = studentsList.AsQueryable().BuildMockDbSet();
 
-            _task9ContextMock.Setup(c => c.Students.FindAsync(expelledStudent.Id))
+            _UniversityMGR_MVCContextMock.Setup(c => c.Students.FindAsync(expelledStudent.Id))
                 .ReturnsAsync(studentsList.Find(s => s.Id == expelledStudent.Id));
-            _task9ContextMock.Setup(c => c.Students.Update(expelledStudent))
+            _UniversityMGR_MVCContextMock.Setup(c => c.Students.Update(expelledStudent))
                 .Returns(dbSetMock.Object.Update)
                 .Callback((Student student) => studentsList[1].GroupId = null);
 
@@ -179,7 +179,7 @@ namespace UniversityMGR_MVC.Tests.Mock
             Assert.True(studentsList[1].GroupId is null);
             Assert.True(studentsList[0].GroupId is not null);
             dbSetMock.Verify(x => x.Update(expelledStudent), Times.Once);
-            _task9ContextMock.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+            _UniversityMGR_MVCContextMock.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         private static List<Student> GetFakeStudentList()

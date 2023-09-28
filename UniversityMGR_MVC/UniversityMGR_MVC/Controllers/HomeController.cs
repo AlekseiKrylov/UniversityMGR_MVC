@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using Task9.Models;
+using UniversityMGR_MVC.Models;
 
 namespace UniversityMGR_MVC.Controllers
 {

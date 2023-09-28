@@ -7,9 +7,9 @@ namespace UniversityMGR_MVC.Services
 {
     public class GroupService : ICRUDService<Group>, IGroupService
     {
-        private readonly Task9Context _context;
+        private readonly UniversityMGRContext _context;
 
-        public GroupService(Task9Context context)
+        public GroupService(UniversityMGRContext context)
         {
             _context = context;
         }

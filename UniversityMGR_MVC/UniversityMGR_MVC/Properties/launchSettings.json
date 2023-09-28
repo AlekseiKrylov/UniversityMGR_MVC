@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "Task9": {
+    "UniversityMGR_MVC": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

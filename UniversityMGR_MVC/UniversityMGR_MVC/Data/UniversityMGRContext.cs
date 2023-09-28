@@ -3,12 +3,10 @@ using UniversityMGR_MVC.Models;
 
 namespace UniversityMGR_MVC.Data
 {
-    public class Task9Context : DbContext
+    public class UniversityMGRContext : DbContext
     {
-        protected Task9Context() { }
-        public Task9Context(DbContextOptions<Task9Context> options) : base(options)
-        {
-        }
+        protected UniversityMGRContext() { }
+        public UniversityMGRContext(DbContextOptions<UniversityMGRContext> options) : base(options) { }
 
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<Group> Groups { get; set; }

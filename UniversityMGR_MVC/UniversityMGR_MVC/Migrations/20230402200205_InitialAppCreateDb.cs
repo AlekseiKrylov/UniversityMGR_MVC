@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Task9.Migrations
+namespace UniversityMGR_MVC.Migrations
 {
     public partial class InitialAppCreateDb : Migration
     {

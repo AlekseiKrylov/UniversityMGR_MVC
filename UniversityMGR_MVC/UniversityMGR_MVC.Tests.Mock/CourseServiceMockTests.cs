@@ -11,12 +11,12 @@ namespace UniversityMGR_MVC.Tests.Mock
     public class CourseServiceMockTests
     {
         private readonly CourseService _courseService;
-        private readonly Mock<Task9Context> _task9ContextMock;
+        private readonly Mock<UniversityMGRContext> _UniversityMGR_MVCContextMock;
 
         public CourseServiceMockTests()
         {
-            _task9ContextMock = new Mock<Task9Context>();
-            _courseService = new CourseService(_task9ContextMock.Object);
+            _UniversityMGR_MVCContextMock = new Mock<UniversityMGRContext>();
+            _courseService = new CourseService(_UniversityMGR_MVCContextMock.Object);
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace UniversityMGR_MVC.Tests.Mock
                 })
                 .Callback((Course course, CancellationToken token) => groupsList.Add(course));
 
-            _task9ContextMock.Setup(c => c.Courses.Add(newCourse))
+            _UniversityMGR_MVCContextMock.Setup(c => c.Courses.Add(newCourse))
                 .Returns(dbSetMock.Object.Add)
                 .Callback((Course course) => groupsList.Add(course));
 
@@ -63,7 +63,7 @@ namespace UniversityMGR_MVC.Tests.Mock
             //Assert
             Assert.Contains(newCourse, groupsList);
             dbSetMock.Verify(m => m.Add(It.IsAny<Course>()), Times.Once());
-            _task9ContextMock.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
+            _UniversityMGR_MVCContextMock.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace UniversityMGR_MVC.Tests.Mock
             };
             var dbSetMock = coursesList.AsQueryable().BuildMockDbSet();
 
-            _task9ContextMock.Setup(c => c.Courses.Update(updatedCourse))
+            _UniversityMGR_MVCContextMock.Setup(c => c.Courses.Update(updatedCourse))
                 .Returns(dbSetMock.Object.Update)
                 .Callback((Course course) => coursesList[0] = course);
 
@@ -100,7 +100,7 @@ namespace UniversityMGR_MVC.Tests.Mock
             //Assert
             Assert.Contains(updatedCourse, coursesList);
             dbSetMock.Verify(x => x.Update(updatedCourse), Times.Once);
-            _task9ContextMock.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+            _UniversityMGR_MVCContextMock.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         private static List<Course> GetFakeCourseList()

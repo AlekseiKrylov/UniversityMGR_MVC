@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Task9.Data;
-using Task9.Services;
+using UniversityMGR_MVC.Data;
+using UniversityMGR_MVC.Services;
 
 namespace UniversityMGR_MVC.Tests.InMemory
 {
@@ -16,7 +16,7 @@ namespace UniversityMGR_MVC.Tests.InMemory
         [Fact]
         public async Task DeleteAsync_NoStudentsExist_CourseDeleted()
         {
-            using (var context = new Task9Context(_fixture.TestContextOptions))
+            using (var context = new UniversityMGRContext(_fixture.TestContextOptions))
             {
                 var service = new CourseService(context);
 
@@ -32,7 +32,7 @@ namespace UniversityMGR_MVC.Tests.InMemory
         [Fact]
         public async Task DeleteAsync_CourseHasStudents_ThrowsException()
         {
-            using (var context = new Task9Context(_fixture.TestContextOptions))
+            using (var context = new UniversityMGRContext(_fixture.TestContextOptions))
             {
                 var controller = new CourseService(context);
 
@@ -50,7 +50,7 @@ namespace UniversityMGR_MVC.Tests.InMemory
         [Fact]
         public async Task DeleteAsync_CourseNotFound_ThrowsException()
         {
-            using (var context = new Task9Context(_fixture.TestContextOptions))
+            using (var context = new UniversityMGRContext(_fixture.TestContextOptions))
             {
                 var service = new CourseService(context);
 
