@@ -2,7 +2,7 @@
 using UniversityMGR_MVC.Data;
 using UniversityMGR_MVC.Models;
 
-namespace Task9.Tests.InMemory
+namespace UniversityMGR_MVC.Tests.InMemory
 {
     public class TestInMemoryFixture : IAsyncLifetime
     {

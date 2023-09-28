@@ -6,7 +6,7 @@ using UniversityMGR_MVC.Data;
 using UniversityMGR_MVC.Models;
 using UniversityMGR_MVC.Services;
 
-namespace Task9.Tests.Mock
+namespace UniversityMGR_MVC.Tests.Mock
 {
     public class CourseServiceMockTests
     {

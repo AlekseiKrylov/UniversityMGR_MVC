@@ -2,7 +2,7 @@
 using Task9.Data;
 using Task9.Services;
 
-namespace Task9.Tests.InMemory
+namespace UniversityMGR_MVC.Tests.InMemory
 {
     public class GroupServiceTests : IClassFixture<TestInMemoryFixture>
     {
